@@ -615,26 +615,23 @@ namespace NativeWebSocket
 
         private List<byte[]> m_MessageList = new List<byte[]>();
 
-        // simple dispatcher for queued messages.
-        public void DispatchMessageQueue()
+        // simple dispatcher for a single queued message.
+        public void DispatchSingleMessage()
         {
-            if (m_MessageList.Count == 0)
-            {
-                return;
-            }
-
-            List<byte[]> messageListCopy;
-
+            byte[] message = null;
+        
             lock (IncomingMessageLock)
             {
-                messageListCopy = new List<byte[]>(m_MessageList);
-                m_MessageList.Clear();
+                if (m_MessageList.Count > 0)
+                {
+                    message = m_MessageList[0];
+                    m_MessageList.RemoveAt(0);
+                }
             }
-
-            var len = messageListCopy.Count;
-            for (int i = 0; i < len; i++)
+        
+            if (message != null)
             {
-                OnMessage?.Invoke(messageListCopy[i]);
+                OnMessage?.Invoke(message);
             }
         }
 
