@@ -616,13 +616,22 @@ namespace NativeWebSocket
         private List<byte[]> m_MessageList = new List<byte[]>();
 
         // simple dispatcher for a single queued message.
-        public void DispatchSingleMessage()
+        public void DispatchMessageQueue()
         {
             byte[] message = null;
         
             lock (IncomingMessageLock)
             {
-                if (m_MessageList.Count > 0)
+                int count = m_MessageList.Count;
+                if (count == 0)
+                    return;
+        
+                if (count > 5)
+                {
+                    message = m_MessageList[count - 1];
+                    m_MessageList.Clear(); // очищаем всю очередь
+                }
+                else
                 {
                     message = m_MessageList[0];
                     m_MessageList.RemoveAt(0);
