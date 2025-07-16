@@ -20,11 +20,5 @@
   ],
   "displayName": "Native WebSockets",
   "unity": "2019.1",
-  "dependencies": {},
-  "samples": [
-  {
-      "displayName": "Example",
-      "description": "WebSocket Example",
-      "path": "Samples~/WebSocketExample"
-  } ]
+  "dependencies": {}
 }
